@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>VA5.3_HW1</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="container py-3">
+      <h1>Random Users</h1>
+      <br />
+      <button id="getRandomUserBtn" class="btn btn-primary">
+        Get Random Users
+      </button>
+      <div id="usersData"></div>
+    </div>
+
+    <script>
+      const getRandomUserBtn = document.querySelector("#getRandomUserBtn");
+      const usersData = document.querySelector("#usersData");
+
+      const apiUrl = "https://randomuser.me/api/?results=3";
+
+      getRandomUserBtn.addEventListener("click", function () {
+        usersData.textContent = "Data Loading...";
+
+        fetch(apiUrl)
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (data) {
+            console.log(data);
+
+            if (data.results && data.results.length > 0) {
+              const postsData = [];
+              for (let i = 0; i < data.results.length; i++) {
+                let userdata = `<div> <br>
+                  <img src= "${data.results[i].picture.thumbnail}" alt="user images"/>
+                  
+                  <br> 
+                  <p>Name: ${data.results[i].name.first} ${data.results[i].name.last}</p>
+                  <p>Email: ${data.results[i].email}</p></div>`;
+                postsData.push(userdata);
+              }
+              const finalData = postsData.join("");
+              usersData.innerHTML = finalData;
+            } else {
+              usersData.textContent = "No Posts Found.";
+            }
+          })
+          .catch(function showError(error) {
+            usersData.textContent =
+              "An error occured while fetching the posts.";
+          });
+      });
+    </script>
+  </body>
+</html>
